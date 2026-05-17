@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Fete du Tennis</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
@@ -12,148 +12,184 @@
   --red:#c0392b;--red2:#e74c3c;--green:#27ae60;--blue:#2980b9;
   --text:#f0e8d0;--text2:#b8a878;--border:rgba(201,168,76,0.3);
 }
-body{background:var(--dark);color:var(--text);font-family:"Crimson Pro",Georgia,serif;min-height:100vh;overflow-x:hidden}
+html,body{height:100%;overflow-x:hidden}
+body{background:var(--dark);color:var(--text);font-family:"Crimson Pro",Georgia,serif;min-height:100%;-webkit-tap-highlight-color:transparent;padding-bottom:env(safe-area-inset-bottom)}
 h1,h2,h3{font-family:"Cinzel",serif}
-#setup-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;background:radial-gradient(ellipse at center,#1e1530 0%,#0d0a14 70%)}
-.setup-title{font-size:clamp(1.8rem,5vw,3rem);color:var(--gold);text-align:center;margin-bottom:.4rem;letter-spacing:.05em;font-family:"Cinzel",serif}
-.setup-sub{color:var(--text2);font-size:1rem;text-align:center;margin-bottom:2rem}
-.setup-card{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:1.75rem;width:100%;max-width:700px}
-.sec-title{font-family:"Cinzel",serif;font-size:.8rem;color:var(--gold);margin-bottom:.75rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:.4rem;margin-top:1.25rem}
+
+/* ===== SETUP ===== */
+#setup-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100svh;padding:1.5rem 1rem;background:radial-gradient(ellipse at center,#1e1530 0%,#0d0a14 70%)}
+.setup-title{font-size:clamp(1.5rem,5vw,3rem);color:var(--gold);text-align:center;margin-bottom:.4rem;letter-spacing:.05em;font-family:"Cinzel",serif}
+.setup-sub{color:var(--text2);font-size:.95rem;text-align:center;margin-bottom:1.5rem}
+.setup-card{background:var(--dark2);border:1px solid var(--border);border-radius:16px;padding:1.5rem;width:100%;max-width:680px}
+.sec-title{font-family:"Cinzel",serif;font-size:.78rem;color:var(--gold);margin-bottom:.65rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:.35rem;margin-top:1.1rem}
 .sec-title:first-child{margin-top:0}
-.team-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid var(--border)}
-.color-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
-.t-input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.95rem;padding:3px 0;outline:none;min-width:80px}
+.team-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:7px 9px;background:rgba(255,255,255,.03);border-radius:9px;border:1px solid var(--border);flex-wrap:wrap}
+.color-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.t-input{flex:1;min-width:80px;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:"Crimson Pro",serif;font-size:.9rem;padding:3px 0;outline:none}
 .t-input:focus{border-color:var(--gold)}
-.h-select{background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.85rem;padding:5px 8px;cursor:pointer}
-.h-prev{width:38px;height:48px;object-fit:cover;object-position:top;border-radius:6px;flex-shrink:0}
-.nb-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
-.nb-btn{background:var(--dark3);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:6px;font-size:1.1rem;cursor:pointer}
+.h-select{background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.8rem;padding:5px 7px;cursor:pointer;max-width:160px}
+.h-prev{width:34px;height:44px;object-fit:cover;object-position:top;border-radius:5px;flex-shrink:0}
+.nb-row{display:flex;align-items:center;gap:10px;margin-bottom:.9rem}
+.nb-btn{background:var(--dark3);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:6px;font-size:1.1rem;cursor:pointer;flex-shrink:0}
 .nb-btn:hover{border-color:var(--gold);color:var(--gold)}
-.nb-count{font-family:"Cinzel",serif;font-size:1.4rem;color:var(--gold);min-width:36px;text-align:center}
-.ch-row{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px}
-.ch-input{background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.9rem;padding:6px 10px;width:100%;outline:none}
+.nb-count{font-family:"Cinzel",serif;font-size:1.3rem;color:var(--gold);min-width:32px;text-align:center}
+.ch-row{display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:5px}
+.ch-input{background:var(--dark3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.88rem;padding:6px 9px;width:100%;outline:none}
 .ch-input:focus{border-color:var(--gold)}
-.btn-rm{background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.4);color:var(--red2);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.8rem}
+.btn-rm{background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.4);color:var(--red2);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:.8rem;white-space:nowrap}
 .btn-rm:hover{background:rgba(192,57,43,.4)}
-.btn-add{background:rgba(201,168,76,.1);border:1px solid var(--border);color:var(--gold);border-radius:6px;padding:7px 14px;cursor:pointer;font-family:"Crimson Pro",serif;font-size:.9rem;margin-top:4px}
+.btn-add{background:rgba(201,168,76,.1);border:1px solid var(--border);color:var(--gold);border-radius:6px;padding:7px 13px;cursor:pointer;font-family:"Crimson Pro",serif;font-size:.88rem;margin-top:4px}
 .btn-add:hover{background:rgba(201,168,76,.2)}
-.btn-start{background:linear-gradient(135deg,#8b6914,#c9a84c);border:none;color:#1a1000;font-family:"Cinzel",serif;font-size:1.05rem;font-weight:700;padding:13px 36px;border-radius:10px;cursor:pointer;margin-top:1.5rem;letter-spacing:.04em;transition:all .2s}
-.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.4)}
-/* BATTLE */
-#battle-screen{display:none;min-height:100vh;background:var(--dark);flex-direction:column}
-.btop{padding:.75rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.btitle{font-family:"Cinzel",serif;font-size:1.2rem;color:var(--gold)}
-.hp-wrap{flex:1;max-width:480px}
-.hp-label{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text2);margin-bottom:3px}
-.hp-bg{height:20px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
-.hp-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);transition:width .6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
-.hp-ft{font-size:.7rem;font-weight:600;color:white;white-space:nowrap}
-.arena{flex:1;display:grid;grid-template-columns:1fr auto;gap:.75rem;padding:.5rem 1rem;min-height:0;overflow:hidden;align-items:stretch}
-.arena-main{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:stretch;min-height:0;width:100%;height:100%}
-.mcenter{display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:.3rem;width:clamp(180px,22vw,320px);height:100%}
-.mimg{flex:1;min-height:0;max-height:calc(100vh - 220px);width:100%;object-fit:contain;filter:drop-shadow(0 0 28px rgba(100,200,50,.4))}
-.monster-hp-inline{width:100%;padding:0 .25rem;margin-top:.2rem}
-.mhp-label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text2);margin-bottom:3px}
-.mhp-bg{height:14px;background:rgba(255,255,255,.08);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-.mhp-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,#e74c3c,#c0392b);transition:width .6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:5px}
-.mhp-ft{font-size:.6rem;font-weight:600;color:white;white-space:nowrap}
-.cards-left{display:flex;flex-direction:column;gap:.5rem;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:4px;justify-content:space-evenly;height:100%}
-.cards-right{display:flex;flex-direction:column;gap:.5rem;min-height:0;overflow-y:auto;overflow-x:hidden;padding-left:4px;justify-content:space-evenly;height:100%}
+.btn-start{background:linear-gradient(135deg,#8b6914,#c9a84c);border:none;color:#1a1000;font-family:"Cinzel",serif;font-size:1rem;font-weight:700;padding:13px 32px;border-radius:10px;cursor:pointer;margin-top:1.4rem;letter-spacing:.04em;transition:all .2s;display:block;margin-left:auto;margin-right:auto}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,168,76,.35)}
+
+/* ===== BATTLE — DESKTOP (>900px) ===== */
+#battle-screen{display:none;flex-direction:column;min-height:100svh}
+.btop{padding:.6rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;flex-shrink:0}
+.btitle{font-family:"Cinzel",serif;font-size:1.1rem;color:var(--gold);white-space:nowrap}
+.hp-wrap{flex:1;min-width:200px;max-width:460px}
+.hp-label{display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);margin-bottom:3px}
+.hp-bg{height:18px;background:rgba(255,255,255,.08);border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.hp-fill{height:100%;border-radius:9px;background:linear-gradient(90deg,#e74c3c,#c0392b);transition:width .6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.hp-ft{font-size:.65rem;font-weight:600;color:white;white-space:nowrap}
+
+/* Arena desktop: cards-left | monster | cards-right | ranking */
+.arena{flex:1;display:grid;grid-template-columns:1fr auto 1fr auto;grid-template-rows:1fr;gap:.75rem;padding:.75rem 1rem;overflow:hidden}
+.cards-left{display:flex;flex-direction:column;justify-content:space-evenly;gap:.5rem;overflow-y:auto;overflow-x:hidden;padding-right:3px;min-width:0}
+.cards-right{display:flex;flex-direction:column;justify-content:space-evenly;gap:.5rem;overflow-y:auto;overflow-x:hidden;padding-left:3px;min-width:0}
 .cards-left::-webkit-scrollbar,.cards-right::-webkit-scrollbar{width:3px}
 .cards-left::-webkit-scrollbar-thumb,.cards-right::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:2px}
-.ranking-panel{padding:.5rem .6rem;background:var(--dark3);border-top:1px solid var(--border);overflow-y:auto;min-height:0;min-width:185px;max-width:220px;display:flex;flex-direction:column;height:100%;box-sizing:border-box}
-.ranking-title{font-family:"Cinzel",serif;font-size:.7rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;text-align:center;flex-shrink:0}
-.r-item{display:flex;align-items:center;gap:8px;padding:8px 8px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);flex:1;transition:background .2s;margin-bottom:0}
-.r-item:last-child{margin-bottom:0}
-.r-item:hover{background:rgba(255,255,255,.07)}
-.r-rank{font-family:"Cinzel",serif;font-size:.8rem;font-weight:700;min-width:28px;text-align:center}
-.r-hero-img{width:38px;height:48px;object-fit:cover;object-position:top;border-radius:6px;flex-shrink:0}
+.mcenter{display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:.3rem;width:clamp(160px,20vw,300px)}
+.mimg{flex:1;min-height:0;max-height:65vh;width:100%;object-fit:contain;filter:drop-shadow(0 0 22px rgba(100,200,50,.35))}
+.monster-hp-inline{width:100%;padding:0 .2rem}
+.mhp-label{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text2);margin-bottom:3px}
+.mhp-bg{height:13px;background:rgba(255,255,255,.08);border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
+.mhp-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,#e74c3c,#c0392b);transition:width .6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:4px}
+.mhp-ft{font-size:.58rem;font-weight:600;color:white;white-space:nowrap}
+
+/* Ranking sidebar */
+.ranking-panel{width:190px;display:flex;flex-direction:column;background:var(--dark3);border-left:1px solid var(--border);padding:.5rem .6rem;overflow-y:auto;flex-shrink:0}
+.ranking-panel::-webkit-scrollbar{width:3px}
+.ranking-panel::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:2px}
+.ranking-title{font-family:"Cinzel",serif;font-size:.68rem;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;text-align:center;flex-shrink:0}
+#rank-list{display:flex;flex-direction:column;gap:6px;flex:1}
+.r-item{display:flex;align-items:center;gap:7px;padding:7px 7px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid var(--border);flex:1;min-height:0;transition:background .2s}
+.r-item:hover{background:rgba(255,255,255,.08)}
+.r-rank{font-family:"Cinzel",serif;font-size:.85rem;font-weight:700;min-width:30px;text-align:center;flex-shrink:0}
+.r-hero-img{width:34px;height:44px;object-fit:cover;object-position:top;border-radius:5px;flex-shrink:0}
 .r-info{flex:1;min-width:0}
-.r-tname{font-size:.82rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r-hname{font-size:.62rem;color:var(--text2);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r-pts{font-family:"Cinzel",serif;font-size:.95rem;font-weight:700;white-space:nowrap}
-/* unused kept for compat */
-.top-teams,.mid-left,.mid-right,.bot-teams{display:none}
+.r-tname{font-size:.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-hname{font-size:.65rem;color:var(--text2);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-bar-wrap{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:3px;overflow:hidden}
+.r-bar-fill{height:100%;border-radius:2px;transition:width .5s}
+.r-pts{font-family:"Cinzel",serif;font-size:.88rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+
+/* TEAM CARDS */
+.tcard{background:var(--dark2);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:9px 11px;cursor:pointer;transition:border-color .2s;position:relative;width:100%;box-sizing:border-box}
+.tcard:active{opacity:.85}
+.tcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tthumb{width:44px;height:56px;object-fit:cover;object-position:top;border-radius:6px;flex-shrink:0}
+.tinfo{flex:1;min-width:0}
+.tlabel{font-family:"Cinzel",serif;font-size:.7rem;color:var(--text2);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tname{font-size:.95rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thero{font-size:.68rem;color:var(--text2);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tdmg{font-family:"Cinzel",serif;font-size:1.1rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+.rank-badge{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;border:2px solid var(--dark2);flex-shrink:0}
+.pw-pill{font-size:.62rem;padding:2px 7px;border-radius:20px;border:1px solid;display:inline-block;margin-top:3px}
+
+/* ===== TABLET (600–900px) ===== */
 @media(max-width:900px){
-  .arena{grid-template-columns:1fr;overflow-y:auto}
-  .arena-main{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
-  .mcenter{grid-column:1/3;width:100%;max-width:200px;margin:0 auto}
-  .cards-left{grid-column:1}
-  .cards-right{grid-column:2}
-  #ranking-bar{position:static!important;max-width:100%}
+  #battle-screen{min-height:100svh;overflow-y:auto}
+  .arena{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto auto;
+    height:auto;overflow:visible;
+    padding:.75rem;gap:.75rem
+  }
+  .mcenter{grid-column:1/3;grid-row:1;width:100%;max-width:220px;margin:0 auto;flex-direction:row;justify-content:center;align-items:center;gap:1rem}
+  .mimg{flex:none;max-height:200px;width:auto;max-width:160px}
+  .monster-hp-inline{flex:1;min-width:120px}
+  .cards-left{grid-column:1;grid-row:2;justify-content:flex-start}
+  .cards-right{grid-column:2;grid-row:2;justify-content:flex-start}
+  .ranking-panel{grid-column:1/3;grid-row:3;width:100%;border-left:none;border-top:1px solid var(--border);flex-direction:column}
+  #rank-list{flex-direction:row;flex-wrap:wrap;gap:6px}
+  .r-item{flex:1;min-width:140px}
 }
-@media(max-width:580px){
-  .arena-main{grid-template-columns:1fr}
-  .mcenter{grid-column:1}
-  .cards-left,.cards-right{grid-column:1}
+
+/* ===== MOBILE (<600px) ===== */
+@media(max-width:600px){
+  .btop{padding:.5rem .75rem;gap:.5rem}
+  .btitle{font-size:.9rem}
+  .hp-wrap{min-width:120px}
+  .arena{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto;
+    padding:.5rem .6rem;gap:.6rem
+  }
+  .mcenter{grid-column:1;grid-row:1;flex-direction:row;max-width:100%;width:100%;gap:.75rem;padding:.25rem 0}
+  .mimg{max-height:150px;max-width:120px}
+  .monster-hp-inline{flex:1}
+  .cards-left{grid-column:1;grid-row:2;justify-content:flex-start}
+  .cards-right{grid-column:1;grid-row:3;justify-content:flex-start}
+  .ranking-panel{grid-column:1;grid-row:4;width:100%;border-left:none;border-top:1px solid var(--border)}
+  #rank-list{flex-direction:row;flex-wrap:wrap;gap:5px}
+  .r-item{flex:1;min-width:130px}
+  .tthumb{width:36px;height:46px}
+  .tname{font-size:.85rem}
+  .tdmg{font-size:1rem}
+  /* modal full screen on mobile */
+  .modal{max-width:100%;border-radius:14px 14px 0 0;margin-top:auto;max-height:85svh}
+  .overlay{align-items:flex-end;padding:0}
+  .numpad-box{max-width:100%;border-radius:14px 14px 0 0}
+  .np-btn{padding:16px 0;font-size:1.1rem}
+  .np-ok{padding:14px}
+  .ch-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .ch-btn{padding:12px 8px;font-size:.95rem}
 }
+
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
 .overlay.hidden{display:none}
-.modal{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:1.25rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:1.25rem;max-width:500px;width:100%;max-height:90svh;overflow-y:auto;position:relative}
 .modal-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
-.modal-himg{width:56px;height:70px;object-fit:cover;object-position:top;border-radius:8px}
-.mclose{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text2);font-size:1.4rem;cursor:pointer;line-height:1}
+.modal-himg{width:54px;height:68px;object-fit:cover;object-position:top;border-radius:8px}
+.mclose{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text2);font-size:1.4rem;cursor:pointer;line-height:1;padding:4px}
 .mclose:hover{color:var(--text)}
 .slabel{font-family:"Cinzel",serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}
 .ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:1rem}
-.ch-btn{padding:10px 8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.9rem;cursor:pointer;transition:all .15s;text-align:center}
-.ch-btn:hover{background:rgba(201,168,76,.12);border-color:var(--gold)}
+.ch-btn{padding:11px 8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.88rem;cursor:pointer;transition:all .15s;text-align:center;touch-action:manipulation}
+.ch-btn:active{background:rgba(201,168,76,.2);border-color:var(--gold)}
 .pw-section{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px;margin-bottom:.9rem}
-.pw-btn{width:100%;padding:9px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.4);border-radius:9px;color:var(--gold);font-family:"Cinzel",serif;font-size:.85rem;cursor:pointer;transition:all .2s;margin-top:7px}
-.pw-btn:hover:not(:disabled){background:rgba(201,168,76,.25);transform:translateY(-1px)}
+.pw-btn{width:100%;padding:11px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.4);border-radius:9px;color:var(--gold);font-family:"Cinzel",serif;font-size:.85rem;cursor:pointer;transition:all .2s;margin-top:7px;touch-action:manipulation}
+.pw-btn:active:not(:disabled){background:rgba(201,168,76,.35)}
 .pw-btn:disabled{opacity:.35;cursor:not-allowed}
+
 /* NUMPAD */
-.numpad-box{background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:1.1rem;max-width:270px;width:100%}
-.np-display{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:"Cinzel",serif;font-size:1.8rem;text-align:right;color:var(--gold2);margin-bottom:.65rem;min-height:56px}
-.np-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:.65rem}
-.np-btn{padding:13px 0;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:"Cinzel",serif;font-size:1rem;cursor:pointer;transition:all .15s}
-.np-btn:hover{background:rgba(201,168,76,.15);border-color:var(--gold)}
+.numpad-box{background:var(--dark3);border:1px solid var(--border);border-radius:14px;padding:1rem;max-width:300px;width:100%}
+.np-display{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:"Cinzel",serif;font-size:2rem;text-align:right;color:var(--gold2);margin-bottom:.6rem;min-height:56px}
+.np-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.6rem}
+.np-btn{padding:15px 0;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:"Cinzel",serif;font-size:1.05rem;cursor:pointer;transition:background .1s;touch-action:manipulation}
+.np-btn:active{background:rgba(201,168,76,.25);border-color:var(--gold)}
 .np-btn.z2{grid-column:span 2}
 .np-btn.del{background:rgba(192,57,43,.1);border-color:rgba(192,57,43,.3);color:var(--red2)}
-.np-btn.del:hover{background:rgba(192,57,43,.25)}
-.np-ok{width:100%;padding:12px;background:linear-gradient(135deg,#1a5c2e,#27ae60);border:none;border-radius:9px;color:white;font-family:"Cinzel",serif;font-size:.95rem;cursor:pointer}
-.np-ok:hover{opacity:.9}
-.np-cancel{width:100%;padding:7px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-family:"Crimson Pro",serif;font-size:.85rem;cursor:pointer;margin-top:5px}
+.np-btn.del:active{background:rgba(192,57,43,.3)}
+.np-ok{width:100%;padding:13px;background:linear-gradient(135deg,#1a5c2e,#27ae60);border:none;border-radius:9px;color:white;font-family:"Cinzel",serif;font-size:1rem;cursor:pointer;touch-action:manipulation}
+.np-ok:active{opacity:.85}
+.np-cancel{width:100%;padding:8px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-family:"Crimson Pro",serif;font-size:.88rem;cursor:pointer;margin-top:5px;touch-action:manipulation}
 .np-double-notice{font-size:.78rem;color:var(--gold);text-align:center;margin-bottom:.4rem;font-style:italic}
-/* POWER MODAL */
-.tgt-select{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.95rem;padding:7px 10px;margin-bottom:8px}
-.act-btn{width:100%;padding:9px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:9px;color:var(--gold);font-family:"Cinzel",serif;font-size:.85rem;cursor:pointer;transition:all .2s;margin-bottom:6px}
-.act-btn:hover{background:rgba(201,168,76,.25)}
-/* VICTORY */
-#victory-screen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center}
-.v-title{font-family:"Cinzel",serif;font-size:clamp(1.8rem,6vw,3.5rem);color:var(--gold);margin-bottom:.4rem}
-.pod-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:9px 14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border)}
-.btn-restart{background:linear-gradient(135deg,#8b6914,#c9a84c);border:none;color:#1a1000;font-family:"Cinzel",serif;font-size:.95rem;font-weight:700;padding:11px 28px;border-radius:10px;cursor:pointer;margin-top:1rem}
-.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--dark3);border:1px solid var(--gold);color:var(--text);padding:9px 18px;border-radius:9px;font-size:.85rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1}
-@media(max-width:900px){
-  .arena{grid-template-columns:1fr}
-  .arena-main{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
-  .mcenter{grid-column:1/3;grid-row:1;order:-1}
-  .cards-left{grid-column:1;grid-row:2}
-  .cards-right{grid-column:2;grid-row:2}
-  .mimg{max-width:200px}
-  #ranking-bar{position:static!important}
-}
-@media(max-width:580px){
-  .arena-main{grid-template-columns:1fr}
-  .mcenter{grid-column:1}
-  .cards-left,.cards-right{grid-column:1}
-}
 
-/* TEAM CARDS */
-.tcard{background:var(--dark2);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 12px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;width:100%;box-sizing:border-box;flex-shrink:0}
-.tcard:hover{transform:translateX(2px);border-color:rgba(201,168,76,.5)}
-.tcard-hdr{display:flex;align-items:center;gap:7px;margin-bottom:4px}
-.tthumb{width:46px;height:58px;object-fit:cover;object-position:top;border-radius:7px;flex-shrink:0}
-.tinfo{flex:1;min-width:0}
-.tlabel{font-family:"Cinzel",serif;font-size:.72rem;color:var(--text2);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tname{font-size:1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.thero{font-size:.68rem;color:var(--text2);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tdmg{font-family:"Cinzel",serif;font-size:1.2rem;font-weight:700;white-space:nowrap;flex-shrink:0}
-.rank-badge{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;border:2px solid var(--dark2)}
-.pw-pill{font-size:.62rem;padding:2px 7px;border-radius:20px;border:1px solid;display:inline-block;margin-top:3px}
+/* POWER MODAL */
+.tgt-select{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:"Crimson Pro",serif;font-size:.95rem;padding:8px 10px;margin-bottom:8px}
+.act-btn{width:100%;padding:11px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:9px;color:var(--gold);font-family:"Cinzel",serif;font-size:.85rem;cursor:pointer;transition:all .2s;margin-bottom:6px;touch-action:manipulation}
+.act-btn:active{background:rgba(201,168,76,.3)}
+
+/* VICTORY */
+#victory-screen{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;overflow-y:auto}
+.v-title{font-family:"Cinzel",serif;font-size:clamp(1.6rem,6vw,3rem);color:var(--gold);margin-bottom:.4rem}
+.pod-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:9px 14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border);max-width:440px;width:100%}
+.btn-restart{background:linear-gradient(135deg,#8b6914,#c9a84c);border:none;color:#1a1000;font-family:"Cinzel",serif;font-size:.95rem;font-weight:700;padding:12px 28px;border-radius:10px;cursor:pointer;margin-top:1rem;touch-action:manipulation}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--dark3);border:1px solid var(--gold);color:var(--text);padding:9px 18px;border-radius:9px;font-size:.85rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -183,7 +219,7 @@ h1,h2,h3{font-family:"Cinzel",serif}
 </div>
 
 <!-- BATTLE -->
-<div id="battle-screen" style="display:none;flex-direction:column;height:100vh;overflow:hidden">
+<div id="battle-screen" style="display:none;flex-direction:column;">
   <div class="btop">
     <span class="btitle">Fete du Tennis</span>
     <div class="hp-wrap">
@@ -199,25 +235,23 @@ h1,h2,h3{font-family:"Cinzel",serif}
     </div>
   </div>
   <div class="arena">
-    <div class="arena-main" id="arena-main">
-      <div class="cards-left" id="cards-left"></div>
-      <div class="mcenter">
-        <img class="mimg" id="mimg" src="" alt="Monstre"/>
-        <div class="monster-hp-inline">
-          <div class="mhp-label">
-            <span id="mhp-mood">Il rugit de rage !</span>
-            <span id="mhp-display">1000 / 1000</span>
-          </div>
-          <div class="mhp-bg">
-            <div class="mhp-fill" id="mhp-fill" style="width:100%">
-              <span class="mhp-ft" id="mhp-ft">1000</span>
-            </div>
+    <div class="cards-left" id="cards-left"></div>
+    <div class="mcenter">
+      <img class="mimg" id="mimg" src="" alt="Monstre"/>
+      <div class="monster-hp-inline">
+        <div class="mhp-label">
+          <span id="mhp-mood">Il rugit de rage !</span>
+          <span id="mhp-display">1000 / 1000</span>
+        </div>
+        <div class="mhp-bg">
+          <div class="mhp-fill" id="mhp-fill" style="width:100%">
+            <span class="mhp-ft" id="mhp-ft">1000</span>
           </div>
         </div>
       </div>
-      <div class="cards-right" id="cards-right"></div>
     </div>
-    <div style="align-self:stretch" id="ranking-bar"></div>
+    <div class="cards-right" id="cards-right"></div>
+    <div class="ranking-panel" id="ranking-bar"></div>
   </div>
 </div>
 
@@ -472,7 +506,7 @@ function getRank(){
 
 function renderRanking(){
   var bar=document.getElementById("ranking-bar");
-  bar.innerHTML='<div class="ranking-title">Classement</div><div id="rank-list" style="display:flex;flex-direction:column;flex:1;gap:6px;">';
+  bar.innerHTML='<div class="ranking-title">Classement</div><div id="rank-list">';
   var rank=getRank();
   var medals=["1er","2eme","3eme","4eme","5eme","6eme"];
   var medalColors=["#c9a84c","#aaaaaa","#cd7f32","#666","#666","#666"];
@@ -487,11 +521,9 @@ function renderRanking(){
         '<div class="r-info">'+
           '<div class="r-tname" style="color:'+t.color+'">'+t.name+'</div>'+
           '<div class="r-hname">'+h.name+'</div>'+
-          '<div style="height:4px;border-radius:2px;background:rgba(255,255,255,.08);margin-top:3px;overflow:hidden">'+
-            '<div style="height:100%;border-radius:2px;background:'+t.color+';width:'+Math.min(100,pct)+'%;transition:width .5s"></div>'+
-          '</div>'+
+          '<div class="r-bar-wrap"><div class="r-bar-fill" style="background:'+t.color+';width:'+Math.min(100,pct)+'%"></div></div>'+
         '</div>'+
-        '<div class="r-pts" style="color:'+t.color+'">'+rank[i].dmg+'<span style="font-size:.6rem;color:var(--text2)"> PV</span></div>'+
+        '<div class="r-pts" style="color:'+t.color+'">'+rank[i].dmg+'<span style="font-size:.58rem;color:var(--text2)"> PV</span></div>'+
       '</div>';
   }
   bar.innerHTML+='</div>';
