@@ -496,7 +496,7 @@ function renderSetupCh(){
   el.innerHTML="";
   for(var i=0;i<challenges.length;i++){
     el.innerHTML+='<div class="ch-row">'+
-      '<input class="ch-input" id="ci-'+i+'" value="'+challenges[i]+'" placeholder="Epreuve" oninput="scheduleAutoSave()"/>'+
+      '<input class="ch-input" id="ci-'+i+'" value="'+challenges[i]+'" placeholder="Epreuve" oninput="onChallengeInput()"/>'+
       '<button class="btn-rm" onclick="rmCh('+i+')">X</button>'+
       '</div>';
   }
@@ -516,11 +516,8 @@ function rmCh(i){
 }
 
 function startGame(){
-  // Sync challenges from the DOM inputs in ch-list
-  challenges=[];
-  var chList=document.getElementById("ch-list");
-  var inputs=chList.querySelectorAll("input.ch-input");
-  for(var i=0;i<inputs.length;i++){if(inputs[i].value.trim())challenges.push(inputs[i].value.trim());}
+  // Sync challenges from DOM inputs
+  syncChallengesFromDOM();
   if(!challenges.length){toast("Ajoutez au moins une epreuve!");return;}
   teams=[];
   for(var i=0;i<nb;i++){
@@ -910,8 +907,15 @@ function getSaves(){
   catch(e){return {};}
 }
 function putSaves(obj){
-  try{localStorage.setItem("fete_tennis_saves",JSON.stringify(obj));}
-  catch(e){toast("Erreur de sauvegarde !");}
+  try{
+    var str = JSON.stringify(obj);
+    localStorage.setItem("fete_tennis_saves", str);
+    // Verify write succeeded
+    var readback = localStorage.getItem("fete_tennis_saves");
+    if(!readback) toast("Attention: sauvegarde echouee !");
+  }catch(e){
+    toast("Erreur localStorage: " + e.message);
+  }
 }
 
 function onSaveNameInput(){
@@ -930,7 +934,17 @@ function newGame(){
   }
   currentSaveName = name;
   showConfigPanel();
-  autoSaveNow();
+  // Save immediately with default state
+  var saves = getSaves();
+  saves[currentSaveName] = {
+    ts: Date.now(),
+    nb: nb,
+    teams: [],
+    challenges: challenges.slice()
+  };
+  putSaves(saves);
+  renderSavesList();
+  toast("Nouvelle partie [" + currentSaveName + "] creee !");
 }
 
 function backToSavePicker(){
@@ -949,21 +963,45 @@ function showConfigPanel(){
   renderSetupCh();
 }
 
+function syncChallengesFromDOM(){
+  var chList = document.getElementById("ch-list");
+  if(!chList) return;
+  var inputs = chList.querySelectorAll("input.ch-input");
+  if(inputs.length === 0) return; // DOM not rendered yet
+  challenges = [];
+  for(var i=0;i<inputs.length;i++){
+    if(inputs[i].value.trim()) challenges.push(inputs[i].value.trim());
+  }
+}
+
+function onChallengeInput(){
+  syncChallengesFromDOM();
+  scheduleAutoSave();
+}
+
 function scheduleAutoSave(){
   clearTimeout(autoSaveTimer);
   autoSaveTimer = setTimeout(function(){
+    syncChallengesFromDOM();
     autoSaveNow();
-  }, 800);
+  }, 600);
 }
 
 function autoSaveNow(){
   if(!currentSaveName) return;
-  // Read challenges
+  // Use synced global challenges array
+  var chs = challenges.slice();
+  // Also try to read from DOM in case user just typed
   var chList = document.getElementById("ch-list");
-  if(!chList) return;
-  var inputs = chList.querySelectorAll("input.ch-input");
-  var chs = [];
-  for(var i=0;i<inputs.length;i++){if(inputs[i].value.trim())chs.push(inputs[i].value.trim());}
+  if(chList){
+    var inputs = chList.querySelectorAll("input.ch-input");
+    if(inputs.length > 0){
+      chs = [];
+      for(var i=0;i<inputs.length;i++){if(inputs[i].value.trim())chs.push(inputs[i].value.trim());}
+      challenges = chs.slice(); // keep global in sync
+    }
+  }
+  if(!chs.length) return;
 
   // Read teams
   var tms = [];
