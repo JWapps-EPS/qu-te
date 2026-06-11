@@ -207,8 +207,28 @@ h1,h2,h3{font-family:"Cinzel",serif}
 <!-- SETUP -->
 <div id="setup-screen">
   <h1 class="setup-title">Fete du Tennis</h1>
-  <p class="setup-sub">Configurez la partie avant le combat</p>
-  <div class="setup-card">
+  <p class="setup-sub">Chargez ou creez une partie</p>
+
+  <!-- SAVE PICKER shown first -->
+  <div class="setup-card" id="save-picker" style="max-width:680px;margin-bottom:1rem">
+    <div class="sec-title" style="margin-top:0">Vos parties sauvegardees</div>
+    <div id="saves-list" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;margin-bottom:.75rem"></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input class="ch-input" id="save-name" placeholder="Nom de la nouvelle partie..." style="flex:1;min-width:160px" oninput="onSaveNameInput()"/>
+      <button class="btn-start" style="margin:0;padding:10px 20px;font-size:.9rem" onclick="newGame()">+ Nouvelle partie</button>
+    </div>
+    <div id="save-name-warning" style="font-size:.75rem;color:var(--red2);margin-top:5px;display:none">Entrez un nom pour creer une partie.</div>
+  </div>
+
+  <!-- CONFIG shown after name chosen -->
+  <div class="setup-card" id="setup-config" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+      <div style="font-family:Cinzel,serif;font-size:1rem;color:var(--gold)" id="current-game-label"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="autosave-indicator" style="font-size:.72rem;color:var(--text2);font-style:italic">Sauvegarde auto active</span>
+        <button class="btn-add" style="padding:5px 12px;font-size:.78rem" onclick="backToSavePicker()">← Changer de partie</button>
+      </div>
+    </div>
     <div class="sec-title">Nombre d'equipes</div>
     <div class="nb-row">
       <button class="nb-btn" onclick="changeNb(-1)">-</button>
@@ -221,12 +241,6 @@ h1,h2,h3{font-family:"Cinzel",serif}
     <div class="sec-title">Epreuves de tennis</div>
     <div id="ch-list"></div>
     <button class="btn-add" onclick="addCh()">+ Ajouter une epreuve</button>
-    <div class="sec-title">Sauvegarde</div>
-    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
-      <input class="ch-input" id="save-name" placeholder="Nom de la partie..." style="flex:1;min-width:140px"/>
-      <button class="btn-add" onclick="saveGame()" style="white-space:nowrap">💾 Sauvegarder</button>
-    </div>
-    <div id="saves-list" style="display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto"></div>
     <div style="text-align:center;margin-top:1rem">
       <button class="btn-start" onclick="startGame()">Lancer le combat !</button>
     </div>
@@ -370,6 +384,7 @@ function setPlayers(i,arr){
   var el=document.getElementById("players-data-"+i);
   if(el)el.value=JSON.stringify(arr);
   renderPlayerTags(i);
+  scheduleAutoSave();
 }
 function renderPlayerTags(i){
   var wrap=document.getElementById("pw-"+i);
@@ -421,11 +436,11 @@ function changeNb(d){
   nb=Math.max(2,Math.min(6,nb+d));
   document.getElementById("nb-display").textContent=nb;
   renderSetupTeams();
-  // Restore players and render tags
   for(var i=0;i<Math.min(saved.length,nb);i++){
     if(saved[i]&&saved[i].length){setPlayers(i,saved[i]);}
   }
   for(var i=0;i<nb;i++) renderPlayerTags(i);
+  scheduleAutoSave();
 }
 
 function renderSetupTeams(){
@@ -449,7 +464,7 @@ function renderSetupTeams(){
       '<div class="team-row" style="flex-direction:column;align-items:stretch;gap:6px">'+
         '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
           '<div class="color-dot" style="background:'+TCOLORS[i]+';flex-shrink:0"></div>'+
-          '<input class="t-input" id="tn-'+i+'" value="Equipe '+(i+1)+'" placeholder="Nom equipe" style="flex:1;min-width:80px"/>'+
+          '<input class="t-input" id="tn-'+i+'" value="Equipe '+(i+1)+'" placeholder="Nom equipe" style="flex:1;min-width:80px" oninput="scheduleAutoSave()"/>'+
           '<select class="h-select" id="th-'+i+'" onchange="updPrev('+i+')">'+opts+'</select>'+
           '<img class="h-prev" id="hp-'+i+'" src="'+IMGS[defHero]+'" alt=""/>'+
         '</div>'+
@@ -473,6 +488,7 @@ function renderSetupTeams(){
 function updPrev(i){
   var v=document.getElementById("th-"+i).value;
   document.getElementById("hp-"+i).src=IMGS[v];
+  scheduleAutoSave();
 }
 
 function renderSetupCh(){
@@ -480,7 +496,7 @@ function renderSetupCh(){
   el.innerHTML="";
   for(var i=0;i<challenges.length;i++){
     el.innerHTML+='<div class="ch-row">'+
-      '<input class="ch-input" id="ci-'+i+'" value="'+challenges[i]+'" placeholder="Epreuve"/>'+
+      '<input class="ch-input" id="ci-'+i+'" value="'+challenges[i]+'" placeholder="Epreuve" oninput="scheduleAutoSave()"/>'+
       '<button class="btn-rm" onclick="rmCh('+i+')">X</button>'+
       '</div>';
   }
@@ -489,12 +505,14 @@ function renderSetupCh(){
 function addCh(){
   challenges.push("Nouvelle epreuve");
   renderSetupCh();
+  scheduleAutoSave();
 }
 
 function rmCh(i){
   if(challenges.length<=1){toast("Il faut au moins 1 epreuve!");return;}
   challenges.splice(i,1);
   renderSetupCh();
+  scheduleAutoSave();
 }
 
 function startGame(){
@@ -877,13 +895,16 @@ function toast(msg){
   setTimeout(function(){t.classList.remove("show");},2800);
 }
 
-renderSetupTeams();
-renderSetupCh();
+// On load: show save picker only
 renderSavesList();
+// setup-config stays hidden until newGame() or loadGame()
 
 // ═══════════════════════════════════════════════
-// SAUVEGARDE LOCALE
+// SAUVEGARDE LOCALE — AUTO-SAVE
 // ═══════════════════════════════════════════════
+var currentSaveName = null;
+var autoSaveTimer = null;
+
 function getSaves(){
   try{return JSON.parse(localStorage.getItem("fete_tennis_saves")||"{}");}
   catch(e){return {};}
@@ -893,123 +914,177 @@ function putSaves(obj){
   catch(e){toast("Erreur de sauvegarde !");}
 }
 
-function saveGame(){
-  // Sync challenges from DOM before saving
-  var chList=document.getElementById("ch-list");
-  var inputs=chList.querySelectorAll("input.ch-input");
-  var chs=[];
+function onSaveNameInput(){
+  var w = document.getElementById("save-name-warning");
+  var v = document.getElementById("save-name").value.trim();
+  if(w) w.style.display = v ? "none" : "none";
+}
+
+function newGame(){
+  var name = document.getElementById("save-name").value.trim();
+  if(!name){
+    var w = document.getElementById("save-name-warning");
+    if(w) w.style.display = "block";
+    document.getElementById("save-name").focus();
+    return;
+  }
+  currentSaveName = name;
+  showConfigPanel();
+  autoSaveNow();
+}
+
+function backToSavePicker(){
+  autoSaveNow();
+  document.getElementById("save-picker").style.display = "block";
+  document.getElementById("setup-config").style.display = "none";
+  renderSavesList();
+}
+
+function showConfigPanel(){
+  document.getElementById("save-picker").style.display = "none";
+  document.getElementById("setup-config").style.display = "block";
+  var lbl = document.getElementById("current-game-label");
+  if(lbl) lbl.textContent = "Partie : " + currentSaveName;
+  renderSetupTeams();
+  renderSetupCh();
+}
+
+function scheduleAutoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(function(){
+    autoSaveNow();
+  }, 800);
+}
+
+function autoSaveNow(){
+  if(!currentSaveName) return;
+  // Read challenges
+  var chList = document.getElementById("ch-list");
+  if(!chList) return;
+  var inputs = chList.querySelectorAll("input.ch-input");
+  var chs = [];
   for(var i=0;i<inputs.length;i++){if(inputs[i].value.trim())chs.push(inputs[i].value.trim());}
 
-  // Read teams from DOM
-  var tms=[];
+  // Read teams
+  var tms = [];
   for(var i=0;i<nb;i++){
+    var nameEl = document.getElementById("tn-"+i);
+    var heroEl = document.getElementById("th-"+i);
     tms.push({
-      name:document.getElementById("tn-"+i).value||("Equipe "+(i+1)),
-      heroId:document.getElementById("th-"+i).value,
-      players:getPlayers(i)
+      name: nameEl ? nameEl.value||("Equipe "+(i+1)) : "Equipe "+(i+1),
+      heroId: heroEl ? heroEl.value : HEROES[0].id,
+      players: getPlayers(i)
     });
   }
 
-  var saveName=document.getElementById("save-name").value.trim();
-  if(!saveName){toast("Entrez un nom pour la sauvegarde !");return;}
-
-  var saves=getSaves();
-  saves[saveName]={
+  var saves = getSaves();
+  saves[currentSaveName] = {
     ts: Date.now(),
     nb: nb,
     teams: tms,
     challenges: chs
   };
   putSaves(saves);
-  toast("Partie [" + saveName + "] sauvegardee !");
-  renderSavesList();
+
+  // Flash indicator
+  var ind = document.getElementById("autosave-indicator");
+  if(ind){
+    ind.textContent = "Sauvegarde...";
+    ind.style.color = "var(--gold)";
+    setTimeout(function(){
+      ind.textContent = "Sauvegarde auto active";
+      ind.style.color = "var(--text2)";
+    }, 1200);
+  }
+}
+
+function saveGame(){
+  autoSaveNow();
+  toast("Partie [" + currentSaveName + "] sauvegardee !");
 }
 
 function loadGame(name){
-  var saves=getSaves();
-  var s=saves[name];
+  var saves = getSaves();
+  var s = saves[name];
   if(!s){toast("Sauvegarde introuvable !");return;}
+  currentSaveName = name;
+  document.getElementById("save-name").value = name;
 
-  // Restore nb
-  nb=s.nb||3;
-  document.getElementById("nb-display").textContent=nb;
+  nb = s.nb||3;
+  document.getElementById("nb-display").textContent = nb;
+  challenges = s.challenges||challenges;
 
-  // Restore challenges
-  challenges=s.challenges||challenges;
-  renderSetupCh();
+  showConfigPanel();
 
-  // Restore teams setup
-  renderSetupTeams();
-  // Set hero and name after render
-  var tms=s.teams||[];
+  var tms = s.teams||[];
   for(var i=0;i<tms.length&&i<nb;i++){
-    var ni=document.getElementById("tn-"+i);
-    var hi=document.getElementById("th-"+i);
-    if(ni&&tms[i].name)ni.value=tms[i].name;
+    var ni = document.getElementById("tn-"+i);
+    var hi = document.getElementById("th-"+i);
+    if(ni&&tms[i].name) ni.value = tms[i].name;
     if(hi&&tms[i].heroId){hi.value=tms[i].heroId;updPrev(i);}
-    if(tms[i].players&&tms[i].players.length){
-      setPlayers(i,tms[i].players);
-    }
+    if(tms[i].players&&tms[i].players.length) setPlayers(i,tms[i].players);
   }
-  document.getElementById("save-name").value=name;
   for(var i=0;i<nb;i++) renderPlayerTags(i);
   toast("Partie [" + name + "] chargee !");
 }
 
 function deleteGame(name){
-  var saves=getSaves();
+  var saves = getSaves();
   delete saves[name];
   putSaves(saves);
+  if(currentSaveName===name) currentSaveName=null;
   toast("Supprimee !");
   renderSavesList();
 }
 
 function renderSavesList(){
-  var el=document.getElementById("saves-list");
-  if(!el)return;
-  var saves=getSaves();
-  var keys=Object.keys(saves).sort(function(a,b){return saves[b].ts-saves[a].ts;});
-  el.innerHTML="";
+  var el = document.getElementById("saves-list");
+  if(!el) return;
+  var saves = getSaves();
+  var keys = Object.keys(saves).sort(function(a,b){return saves[b].ts-saves[a].ts;});
+  el.innerHTML = "";
   if(!keys.length){
-    var empty=document.createElement("div");
-    empty.style.cssText="font-size:.78rem;color:var(--text2);font-style:italic;padding:4px 0";
-    empty.textContent="Aucune sauvegarde";
+    var empty = document.createElement("div");
+    empty.style.cssText = "font-size:.78rem;color:var(--text2);font-style:italic;padding:4px 0";
+    empty.textContent = "Aucune partie sauvegardee — creez-en une ci-dessous.";
     el.appendChild(empty);
     return;
   }
   keys.forEach(function(k){
-    var s=saves[k];
-    var d=new Date(s.ts);
-    var ds=d.toLocaleDateString("fr-FR")+" "+d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-    var nbPlayers=0;
-    if(s.teams)s.teams.forEach(function(t){nbPlayers+=(t.players||[]).length;});
+    var s = saves[k];
+    var d = new Date(s.ts);
+    var ds = d.toLocaleDateString("fr-FR")+" "+d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    var nbPlayers = 0;
+    if(s.teams) s.teams.forEach(function(t){nbPlayers+=(t.players||[]).length;});
 
-    var row=document.createElement("div");
-    row.style.cssText="display:flex;align-items:center;gap:7px;padding:6px 8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px";
+    var row = document.createElement("div");
+    row.style.cssText = "display:flex;align-items:center;gap:7px;padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:background .15s";
+    row.addEventListener("mouseenter",function(){this.style.background="rgba(201,168,76,.08)";});
+    row.addEventListener("mouseleave",function(){this.style.background="rgba(255,255,255,.04)";});
 
-    var info=document.createElement("div");
-    info.style.cssText="flex:1;min-width:0";
+    var info = document.createElement("div");
+    info.style.cssText = "flex:1;min-width:0";
 
-    var title=document.createElement("div");
-    title.style.cssText="font-size:.82rem;font-weight:600;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
-    title.textContent=k;
+    var title = document.createElement("div");
+    title.style.cssText = "font-size:.9rem;font-weight:600;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+    title.textContent = k;
 
-    var meta=document.createElement("div");
-    meta.style.cssText="font-size:.68rem;color:var(--text2)";
-    meta.textContent=ds+" \u2022 "+(s.nb||"?")+" equipes \u2022 "+(s.challenges||[]).length+" epreuves"+(nbPlayers?" \u2022 "+nbPlayers+" joueurs":"");
+    var meta = document.createElement("div");
+    meta.style.cssText = "font-size:.7rem;color:var(--text2);margin-top:2px";
+    meta.textContent = ds + " \u2022 " + (s.nb||"?") + " equipes \u2022 " + (s.challenges||[]).length + " epreuves" + (nbPlayers ? " \u2022 " + nbPlayers + " joueurs" : "");
 
     info.appendChild(title);
     info.appendChild(meta);
 
-    var btnLoad=document.createElement("button");
-    btnLoad.style.cssText="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);color:var(--gold);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.78rem;white-space:nowrap";
-    btnLoad.textContent="Charger";
-    btnLoad.addEventListener("click",(function(name){return function(){loadGame(name);};})(k));
+    var btnLoad = document.createElement("button");
+    btnLoad.style.cssText = "background:linear-gradient(135deg,#8b6914,#c9a84c);border:none;color:#1a1000;border-radius:7px;padding:5px 14px;cursor:pointer;font-family:Cinzel,serif;font-size:.78rem;font-weight:700;white-space:nowrap";
+    btnLoad.textContent = "Charger";
+    btnLoad.addEventListener("click",(function(name){return function(e){e.stopPropagation();loadGame(name);};})(k));
 
-    var btnDel=document.createElement("button");
-    btnDel.style.cssText="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);color:var(--red2);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.78rem";
-    btnDel.textContent="X";
-    btnDel.addEventListener("click",(function(name){return function(){deleteGame(name);};})(k));
+    var btnDel = document.createElement("button");
+    btnDel.style.cssText = "background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.3);color:var(--red2);border-radius:7px;padding:5px 9px;cursor:pointer;font-size:.78rem";
+    btnDel.textContent = "\u2715";
+    btnDel.addEventListener("click",(function(name){return function(e){e.stopPropagation();if(confirm("Supprimer ["+name+"] ?"))deleteGame(name);};})(k));
 
     row.appendChild(info);
     row.appendChild(btnLoad);
